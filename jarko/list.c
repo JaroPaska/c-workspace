@@ -20,7 +20,9 @@ List* createList() {
 
 void deleteList(List *l) {
     free(l->data);
+    l->data = NULL;
     free(l);
+    l = NULL;
 }
 
 void push_back(List *l, ll value) {
