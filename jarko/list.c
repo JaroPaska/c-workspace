@@ -10,14 +10,15 @@ typedef struct list {
     size_t  limit;
 } List;
 
-void create(List *l) {
-    l = (List *) malloc(sizeof(List));
+List* createList() {
+    List *l = (List *) malloc(sizeof(List));
     l->data = (ll *) malloc(sizeof(ll));
     l->current = 0;
     l->limit = 1;
+    return l;
 }
 
-void delete(List *l) {
+void deleteList(List *l) {
     free(l->data);
     free(l);
 }
@@ -64,8 +65,7 @@ int main() {
     for (int i = 0; i < n; i++)
         scanf("%d %d", &h[i], &v[i]);
 
-    List *s;
-    create(s);
+    List *s = createList();
     for (int i = 0; i < n; i++) {
         while (s->current > 0 && h[back(s)] < h[i]) {
             res[i] += v[back(s)];
@@ -73,9 +73,9 @@ int main() {
         }
         push_back(s, i);
     }
-    delete(s);
+    deleteList(s);
 
-    create(s);
+    s = createList();
     for (int i = n-1; i >= 0; i--) {
         while (s->current > 0 && h[back(s)] < h[i]) {
             res[i] += v[back(s)];
@@ -83,7 +83,7 @@ int main() {
         }
         push_back(s, i);
     }
-    delete(s);
+    deleteList(s);
 
     long long maxi = 0;
     for (int i = 0; i < n; i++)
