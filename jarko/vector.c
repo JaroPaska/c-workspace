@@ -89,7 +89,7 @@ int main() {
         }
         push_back(vector, i);
     }
-    deleteList(vector);
+    deleteVector(vector);
     long long maxi = 0;
     for (int i = 0; i < n; i++)
         maxi = (res[i] > maxi ? res[i] : maxi);
