@@ -12,4 +12,5 @@ int main() {
         printf("je to penis\n");
     else
         printf("je to pussy\n");
+    return 0;
 }
