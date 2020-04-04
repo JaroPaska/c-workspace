@@ -6,9 +6,9 @@
 typedef long long ll;
 
 typedef struct vector {
-    ll     *data;
-    size_t  current;
-    size_t  limit;
+    ll *data;
+    size_t current;
+    size_t limit;
 } Vector;
 
 Vector* createVector() {
