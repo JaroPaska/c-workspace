@@ -26,15 +26,27 @@ void deleteVector(Vector *vector) {
     vector = NULL;
 }
 
+void upsize(Vector *vector) {
+    ll *new_data = (ll *) malloc(2 * vector->limit * sizeof(ll));
+    for (int i = 0; i < vector->current; i++)
+        new_data[i] = vector->data[i];
+    free(vector->data);
+    vector->data = new_data;
+    vector->limit *= 2;
+}
+
+void downsize(Vector *vector) {
+    ll *new_data = (ll *) malloc(2 * vector->current * sizeof(ll));
+    for (int i = 0; i < vector->current; i++)
+        new_data[i] = vector->data[i];
+    free(vector->data);
+    vector->data = new_data;
+    vector->limit /= 2;
+}
+
 void push_back(Vector *vector, ll value) {
-    if (vector->current == vector->limit) {
-        ll *new_data = (ll *) malloc(2 * vector->limit * sizeof(ll));
-        for (int i = 0; i < vector->current; i++)
-            new_data[i] = vector->data[i];
-        free(vector->data);
-        vector->data = new_data;
-        vector->limit *= 2;
-    }
+    if (vector->current == vector->limit)
+        upsize(vector);
     vector->data[vector->current] = value;
     vector->current++;
 }
@@ -42,14 +54,8 @@ void push_back(Vector *vector, ll value) {
 void pop_back(Vector *vector) {
     assert(vector->current > 0);
     vector->current--;
-    if (4 * vector->current == vector->limit) {
-        ll *new_data = (ll *) malloc(2 * vector->current * sizeof(ll));
-        for (int i = 0; i < vector->current; i++)
-            new_data[i] = vector->data[i];
-        free(vector->data);
-        vector->data = new_data;
-        vector->limit /= 2;
-    }
+    if (4 * vector->current == vector->limit)
+        downsize(vector);
 }
 
 ll back(Vector *vector) {
