@@ -69,7 +69,7 @@ int main() {
         scanf("%d %d", &h[i], &v[i]);
     memset(res, 0, n * sizeof(ll));
 
-    // moos in one direction
+    // moos from left to right
     Vector *vector = createVector();
     for (int i = 0; i < n; i++) {
         while (vector->current > 0 && h[back(vector)] < h[i]) {
@@ -80,7 +80,7 @@ int main() {
     }
     deleteVector(vector);
 
-    // moos in other direction
+    // moos from right to left
     vector = createVector();
     for (int i = n-1; i >= 0; i--) {
         while (vector->current > 0 && h[back(vector)] < h[i]) {
