@@ -26,6 +26,10 @@ void deleteVector(Vector *vector) {
     vector = NULL;
 }
 
+int is_empty(Vector *vector) {
+    return vector->current == 0 ? 1 : 0;
+}
+
 void upsize(Vector *vector) {
     ll *new_data = (ll *) malloc(2 * vector->limit * sizeof(ll));
     for (int i = 0; i < vector->current; i++)
@@ -52,58 +56,44 @@ void push_back(Vector *vector, ll value) {
 }
 
 void pop_back(Vector *vector) {
-    assert(vector->current > 0);
+    assert(!is_empty(vector));
     vector->current--;
     if (4 * vector->current == vector->limit)
         downsize(vector);
 }
 
+void insert(Vector *vector, int index, ll value) {
+    if (vector->current == vector->limit)
+        upsize(vector);
+    for (int i = vector->current; i > index; i--)
+        vector->data[i] = vector->data[i - 1];
+    vector->data[index] = value;
+    vector->current++;
+}
+
+void erase(Vector *vector, int index) {
+    assert(!is_empty(vector));
+    vector->current--;
+    for (int i = index; i < vector->current; i++)
+        vector->data[i] = vector->data[i + 1];
+    if (4 * vector->current == vector->limit)
+        downsize(vector);
+}
+
 ll back(Vector *vector) {
-    assert(vector->current > 0);
+    assert(!is_empty(vector));
     return vector->data[vector->current - 1];
 }
 
 int main() {
-    int n;
-    scanf("%d", &n);
-
-    // allocate memory and read input
-    int *h = (int *) malloc(n * sizeof(int));
-    int *v = (int *) malloc(n * sizeof(int));
-    ll *res = (ll *) malloc(n * sizeof(ll));
-    for (int i = 0; i < n; i++)
-        scanf("%d %d", &h[i], &v[i]);
-    memset(res, 0, n * sizeof(ll));
-
-    // moos from left to right
     Vector *vector = createVector();
-    for (int i = 0; i < n; i++) {
-        while (vector->current > 0 && h[back(vector)] < h[i]) {
-            res[i] += v[back(vector)];
-            pop_back(vector);
-        }
-        push_back(vector, i);
-    }
+    push_back(vector, 3);
+    push_back(vector, 1);
+    push_back(vector, 1);
+    insert(vector, 2, 4);
+    erase(vector, 0);
+    for (int i = 0; i < 4; i++)
+        printf("%d ", vector->data[i]);
     deleteVector(vector);
-
-    // moos from right to left
-    vector = createVector();
-    for (int i = n-1; i >= 0; i--) {
-        while (vector->current > 0 && h[back(vector)] < h[i]) {
-            res[i] += v[back(vector)];
-            pop_back(vector);
-        }
-        push_back(vector, i);
-    }
-    deleteVector(vector);
-    long long maxi = 0;
-    for (int i = 0; i < n; i++)
-        maxi = (res[i] > maxi ? res[i] : maxi);
-    printf("%lld\n", maxi);
-    
-    // deallocate memory and return success (code 0)
-    free(h);
-    free(v);
-    free(res);
     return 0;
 }
