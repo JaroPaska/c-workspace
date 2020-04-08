@@ -26,6 +26,10 @@ void deleteVector(Vector *vector) {
     vector = NULL;
 }
 
+int size(Vector *vector) {
+    return vector->current;
+}
+
 int is_empty(Vector *vector) {
     return vector->current == 0 ? 1 : 0;
 }
