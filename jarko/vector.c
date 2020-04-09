@@ -34,6 +34,10 @@ int is_empty(Vector *vector) {
     return vector->current == 0 ? 1 : 0;
 }
 
+int in_range(Vector *vector, int index) {
+    return index >= 0 && index < vector->current ? 1 : 0;
+}
+
 void upsize(Vector *vector) {
     ll *new_data = (ll *) malloc(2 * vector->limit * sizeof(ll));
     for (int i = 0; i < vector->current; i++)
@@ -84,9 +88,26 @@ void erase(Vector *vector, int index) {
         downsize(vector);
 }
 
+ll get(Vector *vector, int index) {
+    assert(in_range(vector, index));
+    return vector->data[index];
+}
+
+void set(Vector *vector, int index, ll value) {
+    assert(in_range(vector, index));
+    vector->data[index] = value;
+}
+
 ll back(Vector *vector) {
     assert(!is_empty(vector));
     return vector->data[vector->current - 1];
+}
+
+int find(Vector *vector, ll value) {
+    for (int i = 0; i < vector->current; i++)
+        if (vector->data[i] == value)
+            return i;
+    return -1;
 }
 
 int main() {
