@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef long long ll;
+typedef long long vector_t;
 
 typedef struct vector {
-    ll *data;
+    vector_t *data;
     size_t current;
     size_t limit;
 } Vector;
 
 Vector* createVector() {
     Vector *vector = (Vector *) malloc(sizeof(Vector));
-    vector->data = (ll *) malloc(sizeof(ll));
+    vector->data = (vector_t *) malloc(sizeof(vector_t));
     vector->current = 0;
     vector->limit = 1;
     return vector;
@@ -34,12 +34,12 @@ int is_empty(Vector *vector) {
     return vector->current == 0 ? 1 : 0;
 }
 
-int in_range(Vector *vector, int index) {
+int is_in_range(Vector *vector, int index) {
     return index >= 0 && index < vector->current ? 1 : 0;
 }
 
 void upsize(Vector *vector) {
-    ll *new_data = (ll *) malloc(2 * vector->limit * sizeof(ll));
+    vector_t *new_data = (vector_t *) malloc(2 * vector->limit * sizeof(vector_t));
     for (int i = 0; i < vector->current; i++)
         new_data[i] = vector->data[i];
     free(vector->data);
@@ -48,7 +48,7 @@ void upsize(Vector *vector) {
 }
 
 void downsize(Vector *vector) {
-    ll *new_data = (ll *) malloc(2 * vector->current * sizeof(ll));
+    vector_t *new_data = (vector_t *) malloc(2 * vector->current * sizeof(vector_t));
     for (int i = 0; i < vector->current; i++)
         new_data[i] = vector->data[i];
     free(vector->data);
@@ -56,7 +56,7 @@ void downsize(Vector *vector) {
     vector->limit /= 2;
 }
 
-void push_back(Vector *vector, ll value) {
+void push_back(Vector *vector, vector_t value) {
     if (vector->current == vector->limit)
         upsize(vector);
     vector->data[vector->current] = value;
@@ -70,7 +70,8 @@ void pop_back(Vector *vector) {
         downsize(vector);
 }
 
-void insert(Vector *vector, int index, ll value) {
+void insert(Vector *vector, int index, vector_t value) {
+    assert(index >= 0 && index <= vector->current);
     if (vector->current == vector->limit)
         upsize(vector);
     for (int i = vector->current; i > index; i--)
@@ -80,7 +81,7 @@ void insert(Vector *vector, int index, ll value) {
 }
 
 void erase(Vector *vector, int index) {
-    assert(!is_empty(vector));
+    assert(is_in_range(vector, index));
     vector->current--;
     for (int i = index; i < vector->current; i++)
         vector->data[i] = vector->data[i + 1];
@@ -88,22 +89,22 @@ void erase(Vector *vector, int index) {
         downsize(vector);
 }
 
-ll get(Vector *vector, int index) {
-    assert(in_range(vector, index));
+vector_t get(Vector *vector, int index) {
+    assert(is_in_range(vector, index));
     return vector->data[index];
 }
 
-void set(Vector *vector, int index, ll value) {
-    assert(in_range(vector, index));
+void set(Vector *vector, int index, vector_t value) {
+    assert(is_in_range(vector, index));
     vector->data[index] = value;
 }
 
-ll back(Vector *vector) {
+vector_t back(Vector *vector) {
     assert(!is_empty(vector));
     return vector->data[vector->current - 1];
 }
 
-int find(Vector *vector, ll value) {
+int find(Vector *vector, vector_t value) {
     for (int i = 0; i < vector->current; i++)
         if (vector->data[i] == value)
             return i;
@@ -112,13 +113,6 @@ int find(Vector *vector, ll value) {
 
 int main() {
     Vector *vector = createVector();
-    push_back(vector, 3);
-    push_back(vector, 1);
-    push_back(vector, 1);
-    insert(vector, 2, 4);
-    erase(vector, 0);
-    for (int i = 0; i < 4; i++)
-        printf("%d ", vector->data[i]);
+    insert(vector, 0, 3);
     deleteVector(vector);
-    return 0;
 }
